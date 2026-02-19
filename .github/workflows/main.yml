@@ -24,7 +24,7 @@ jobs:
         run: npm install
 
       - name: Run Validation Step
-        run: npm run build
+        run: npm build
 
   deploy:
     name: Continuous Deployment
