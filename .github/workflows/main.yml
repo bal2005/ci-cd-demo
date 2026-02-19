@@ -1,0 +1,37 @@
+name: CI-CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      
+
+jobs:
+  build:
+    name: Continuous Integration
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Validation Step
+        run: npm run build
+
+  deploy:
+    name: Continuous Deployment
+    needs: build                
+    if: github.ref == 'refs/heads/main'   
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger Render Deployment
+        run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
